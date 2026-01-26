@@ -28,15 +28,16 @@ jobs:
           aws ecr get-login-password --region $AWS_REGION \
           | docker login --username AWS --password-stdin $ECR_REGISTRY
 
-                - name: Debug vars
+      - name: Debug vars
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
         run: |
           echo "REGISTRY=$ECR_REGISTRY"
           echo "REGION=$AWS_REGION"
 
-
       - name: Build and Push Docker Image
         env:
-          AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
@@ -45,6 +46,8 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
       - name: Update kubeconfig
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           aws eks update-kubeconfig \
             --name cloud-native-eks \
