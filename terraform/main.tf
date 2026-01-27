@@ -35,3 +35,4 @@ module "addons" {
 
   cluster_name = var.cluster_name
 }
+
