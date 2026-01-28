@@ -55,4 +55,5 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/
-          kubectl rollout status deployment/eks-python-app
+          kubectl rollout status deployment/eks-python-app --timeout=5m
+
