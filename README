@@ -1,0 +1,222 @@
+# Cloud-Native CI/CD Pipeline on AWS EKS
+
+## 🚀 Project Overview
+
+This project demonstrates a **production-style cloud-native deployment** using AWS EKS, Terraform, Docker, GitHub Actions, and Kubernetes.
+
+Simple term explanation:
+
+> When I push code to GitHub, a robot automatically builds my app, puts it in a container, sends it to AWS, and Kubernetes makes sure it’s always running and reachable on the internet.
+
+**end‑to‑end infrastructure + CI/CD**, not just YAML copy‑paste.
+
+---
+
+## 🧱 Architecture (High Level)
+
+**Flow:**
+
+1. Developer pushes code to GitHub
+2. GitHub Actions builds Docker image
+3. Image is pushed to Amazon ECR
+4. GitHub Actions deploys manifests to EKS
+5. AWS Load Balancer Controller provisions an ALB
+6. Traffic flows from ALB → Service → Pods
+
+Key AWS services:
+
+* **EKS** – Kubernetes control plane
+* **EC2 Managed Node Groups** – Worker nodes
+* **ECR** – Container registry
+* **ALB (via AWS Load Balancer Controller)** – Ingress
+* **IAM + OIDC (IRSA)** – Secure auth without static keys
+
+---
+
+## 📁 Repository Structure
+
+```
+app/
+  Dockerfile
+  app.py
+  requirements.txt
+
+k8s/
+  deployment.yaml
+  service.yaml
+  ingress.yaml
+
+terraform/
+  networking/      # VPC, subnets
+  eks/             # EKS cluster & node groups
+  ecr.tf           # ECR repository
+  iam/             # IAM roles (OIDC, ALB, nodes)
+  addons/          # AWS Load Balancer Controller (IRSA)
+  cloudwatch.tf    # Logging
+
+.github/workflows/
+  deploy.yml       # CI/CD pipeline
+```
+
+---
+
+## 🐳 Application Layer
+
+* Simple **Python Flask app**
+* Containerized with Docker
+* Exposed on port `5000`
+
+The Dockerfile lives in `app/` and is built by GitHub Actions.
+
+Analogy:
+
+> The app is the toy, Docker is the box, ECR is the warehouse.
+
+---
+
+## ☸️ Kubernetes Layer
+
+### Deployment
+
+* 2 replicas for high availability
+* Stateless pods
+
+### Service
+
+* ClusterIP
+* Internal load balancing between pods
+
+### Ingress
+
+* AWS ALB via `alb` ingressClass
+* Internet-facing
+* Path-based routing
+
+---
+
+## 🔁 CI/CD Pipeline (GitHub Actions)
+
+Triggered on:
+
+* Push to `main`
+
+Steps:
+
+1. Checkout code
+2. Authenticate to AWS using **OIDC** (no secrets)
+3. Build Docker image
+4. Push image to ECR
+5. Update kubeconfig
+6. Apply Kubernetes manifests
+7. Wait for rollout completion
+
+Analogy:
+
+> GitHub Actions is the factory robot that never sleeps.
+
+---
+
+## 🔐 Security Model (Important)
+
+* **OIDC trust** between GitHub and AWS
+* No long‑lived AWS keys
+* **IRSA** used for AWS Load Balancer Controller
+* Least‑privilege IAM roles
+
+---
+
+## 🧠 Debug Stories (What I Actually Fixed)
+
+### 1️⃣ Pods stuck in `Pending`
+
+**Cause:** Node group capacity exhausted
+
+**Fix:**
+
+* Scaled managed node group
+* Verified scheduling events
+
+Lesson:
+
+> Kubernetes can’t place pods if there are no chairs.
+
+---
+
+### 2️⃣ GitHub Actions could not access cluster
+
+**Cause:** IAM role not mapped in `aws-auth`
+
+**Fix:**
+
+* Added GitHubActionsEKSRole to `system:masters`
+
+Lesson:
+
+> AWS auth ≠ Kubernetes auth
+
+---
+
+### 3️⃣ ALB not provisioning
+
+**Cause:** Missing IRSA permissions
+
+**Fix:**
+
+* Correct IAM policy + trust relationship
+
+Lesson:
+
+> Controllers need AWS permissions too.
+
+---
+
+## 🌐 Live Demo
+
+Ingress URL (auto‑generated):
+
+```
+k8s-default-ekspytho-xxxx.us-east-1.elb.amazonaws.com
+```
+
+Accessible over HTTP.
+
+---
+
+## 📌 Why This Project Matters
+
+This repo demonstrates:
+
+* Real AWS EKS usage (not Minikube)
+* Terraform-managed infrastructure
+* Secure CI/CD without secrets
+* Kubernetes troubleshooting skills
+* Cloud‑native thinking
+
+Perfect for:
+
+* Junior Cloud Engineer
+* Junior DevOps Engineer
+* Platform / SRE internships
+
+---
+
+## 📬 Next Improvements
+
+* HTTPS with ACM
+* HPA (Horizontal Pod Autoscaler)
+* Blue/Green or Canary deploys
+* Terraform remote state (S3 + DynamoDB)
+
+---
+
+## 👋 About Me
+
+I’m transitioning into Cloud Engineering with hands‑on AWS, Kubernetes, and Terraform experience.
+
+This project reflects how I **think, debug, and build** — not just what I copy.
+
+📎 LinkedIn: https://www.linkedin.com/in/unclekesh/ Email: olalekankeshinro22@gmail.com
+
+Alb controller and app run image: alb controller_app_run.jpg
+
+The architecture diagram image: architecture.png
