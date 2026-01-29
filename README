@@ -206,6 +206,7 @@ Perfect for:
 * HPA (Horizontal Pod Autoscaler)
 * Blue/Green or Canary deploys
 * Terraform remote state (S3 + DynamoDB)
+* Cloud watch
 
 ---
 
