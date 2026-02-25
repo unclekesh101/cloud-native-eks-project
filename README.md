@@ -127,12 +127,6 @@ The goal was not just to "make it work" — but to make it **repeatable, secure,
 
 > Terraform is the blueprint, GitHub Actions is the robot, Kubernetes is the factory, AWS is the land.
 
----
-
-
-
----
-
 ## Architecture Overview
 
 **Flow:**
