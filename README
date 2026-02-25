@@ -1,6 +1,4 @@
-# Cloud-Native CI/CD on AWS EKS — STAR Storytelling
-
-## 🚀 Project Summary (Why This Exists)
+## Cloud-Native CI/CD on AWS EKS — STAR Storytelling (Why This Exists)
 
 This project was built to **solve a real business problem**: slow, manual, and error‑prone application deployments.
 
@@ -10,23 +8,28 @@ Instead of deploying apps by hand and clicking around the AWS console, this syst
 
 ---
 
-## ⭐ STAR Method Breakdown
-
-### 🟦 S — Situation (The Problem)
+## S — Situation (The Problem)
 
 Many teams struggle with:
 
 * Manual deployments that are slow and risky
+
 * Inconsistent environments ("works on my machine")
+
 * Infrastructure created by hand, hard to reproduce or destroy
+
 * Long‑lived AWS credentials checked into CI/CD tools
+
 * Difficulty scaling applications reliably for real users
 
 **Business impact:**
 
 * Slower feature delivery
+
 * Higher chance of outages
+
 * Security risks
+
 * Wasted engineering time
 
 **Analogy (simple):**
@@ -35,7 +38,33 @@ Many teams struggle with:
 
 ---
 
-### 🟨 T — Task (What I Needed to Do)
+## R — Result (Impact & Outcomes)
+
+## Engineering Results
+
+* Fully automated deployments — no manual steps
+
+* Zero‑downtime rolling updates
+
+* Infrastructure can be created or destroyed on demand
+
+* Secure cloud access without stored credentials
+
+## Business Value
+
+* Deployment time reduced from manual steps to minutes
+
+* Human error significantly reduced
+
+* Security posture improved (OIDC, IAM, IRSA)
+
+* Cost control enabled by clean teardown of resources
+
+**Plain English:**
+
+> Faster releases, fewer mistakes, safer systems.
+
+## T — Task (What I Needed to Do)
 
 My responsibility was to:
 
@@ -92,50 +121,41 @@ The goal was not just to "make it work" — but to make it **repeatable, secure,
 
 ---
 
-### 🟩 R — Result (Impact & Outcomes)
 
-#### 🚀 Engineering Results
-
-* Fully automated deployments — no manual steps
-* Zero‑downtime rolling updates
-* Infrastructure can be created or destroyed on demand
-* Secure cloud access without stored credentials
-
-#### 💼 Business Value
-
-* Deployment time reduced from manual steps to minutes
-* Human error significantly reduced
-* Security posture improved (OIDC, IAM, IRSA)
-* Cost control enabled by clean teardown of resources
-
-**Plain English:**
-
-> Faster releases, fewer mistakes, safer systems.
 
 ---
 
-## 🧱 Architecture Overview
+## Architecture Overview
 
 **Flow:**
 
 1. Developer pushes code to GitHub
+
 2. GitHub Actions builds Docker image
+
 3. Image pushed to Amazon ECR
+
 4. GitHub Actions deploys to EKS
+
 5. AWS Load Balancer Controller provisions ALB
+
 6. Users access the app via public ALB URL
 
 **Core Services:**
 
 * Amazon EKS
+
 * EC2 Managed Node Groups
+
 * Amazon ECR
+
 * AWS ALB
+
 * IAM + OIDC
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 app/
@@ -160,17 +180,16 @@ terraform/
   deploy.yml
 ```
 
----
+## Debug Stories (What I Learned). Each issue was debugged using logs, events, and AWS/K8s primitives.
 
-## 🧠 Debug Stories (What I Learned). Each issue was debugged using logs, events, and AWS/K8s primitives.
-
-### 1️⃣ Pods stuck in `Pending`
+### 1) Pods stuck in `Pending`
 
 **Cause:** Node group capacity exhausted
 
 **Fix:**
 
 * Scaled managed node group
+
 * Verified scheduling events
 
 Lesson:
@@ -179,7 +198,7 @@ Lesson:
 
 ---
 
-### 2️⃣ GitHub Actions could not access cluster
+### 2) GitHub Actions could not access cluster
 
 **Cause:** IAM role not mapped in `aws-auth`
 
@@ -193,7 +212,7 @@ Lesson:
 
 ---
 
-### 3️⃣ ALB not provisioning
+### 3) ALB not provisioning
 
 **Cause:** Missing IRSA permissions
 
@@ -206,29 +225,31 @@ Lesson:
 > Controllers need AWS permissions too.
 ---
 
-## 🌐 Live Demo
+## Live Demo
 
 The application is exposed via an auto‑generated ALB URL:
 
-```
 http://k8s-xxxx.us-east-1.elb.amazonaws.com
-```
 
 ---
 
-## 📌 Why This Project Matters
+## Why This Project Matters
 
 This project demonstrates:
 
 * Real AWS EKS usage (not local clusters)
+
 * Infrastructure as Code
+
 * Secure CI/CD without secrets
+
 * Kubernetes debugging skills
+
 * Cloud‑native system design thinking
 
 ---
 
-## 📬 Next Improvements
+## Next Improvements
 
 * HTTPS with ACM
 * HPA (Horizontal Pod Autoscaler)
@@ -244,13 +265,11 @@ The architecture diagram image: architecture.png
 
 ---
 
-## 👋 About Me
-
-I’m transitioning into Cloud Engineering with hands‑on AWS, Terraform, Docker, CICD, and Kubernetes experience.
+## About Me
 
 This project reflects how I **think, debug, and build** — not just what tools i know.
 
-📎 LinkedIn: https://www.linkedin.com/in/unclekesh/ Email: olalekankeshinro22@gmail.com
+ LinkedIn: https://www.linkedin.com/in/unclekesh/ Email: olalekankeshinro22@gmail.com
 
 
 
