@@ -66,47 +66,58 @@ Many teams struggle with:
 My responsibility was to:
 
 * Design a **production‑style CI/CD pipeline**
+
 * Automate infrastructure creation and teardown
+
 * Secure AWS access without static credentials
+
 * Deploy a containerized application that is:
 
   * Highly available
+
   * Internet‑accessible
+
   * Easy to update
 
-The goal was not just to "make it work" — but to make it **repeatable, secure, and scalable**.
+The goal was not just to "make it work" — but to make it **repeatable, secure, and scalable**
 
----
+## A — Action (What I Built & Why)
 
-### 🟧 A — Action (What I Built & Why)
-
-#### Infrastructure (Terraform)
+## Infrastructure (Terraform)
 
 * Provisioned VPC, subnets, EKS cluster, node groups, and ECR using **Terraform**
+
 * Enabled full infrastructure reproducibility and version control
 
-#### Application Packaging (Docker + ECR)
+## Application Packaging (Docker + ECR)
 
 * Containerized a Python application with Docker
+
 * Stored images in Amazon ECR for reliable, versioned delivery
 
-#### CI/CD (GitHub Actions)
+## CI/CD (GitHub Actions)
 
 * Built a pipeline triggered on `main` branch pushes
+
 * Automatically:
 
   1. Builds Docker image
+
   2. Pushes image to ECR
+
   3. Connects to EKS
+
   4. Deploys Kubernetes manifests
 
-#### Security (OIDC + IAM)
+## Security (OIDC + IAM)
 
 * Used **GitHub Actions OIDC** instead of AWS access keys
+
 * Implemented least‑privilege IAM roles
+
 * Used **IRSA** for AWS Load Balancer Controller
 
-#### Kubernetes & Networking
+## Kubernetes & Networking
 
 * Deployed workloads to EKS with rolling updates
 * Exposed the app using AWS Load Balancer Controller
